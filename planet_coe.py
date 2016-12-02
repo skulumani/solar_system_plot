@@ -27,10 +27,16 @@ def element_approx(JD_curr, planet_flag):
     argp = lonperi - raan
     M = L - lonperi + b*T**2 + c*np.cos(f*T) + s*np.sin(f*T)
 
+    M = normalize(np.deg2rad(M),-np.pi,np.pi)
     # solve kepler's equation to compute E and v
-    E, nu, count = kepler_eq_E(M_in,ecc_in)
-    # package into a vector and output
+    E, nu, count = kepler_eq_E(M,ecc)
 
+    # package into a vector and output
+    p = a * (1-ecc**2)
+
+    coe = (p,ecc,np.deg2rad(inc),np.deg2rad(raan),np.deg2rad(argp),normalize(nu,0,2*np.pi))
+
+    return coe
 
 def planet_elements(JD,planet_flag):
     """
