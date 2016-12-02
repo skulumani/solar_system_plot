@@ -231,9 +231,16 @@ def planet_elements(JD,planet_flag):
 
 if __name__ == "__main__":
     JD_curr = 2457724.500000
+    planet_flag = 3
+    p,ecc,inc,raan,argp,nu = element_approx(JD_curr,planet_flag)
 
-    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_elements(JD_curr,3)
-    # coe = element_approx(JD_curr,3)
+    print("p: %16.16f au" % p)
+    print("a: %16.16f au" % (p/(1-ecc**2)))
+    print("ecc: %16.16f " % ecc)
+    print("inc: %16.16f deg" % np.rad2deg(inc))
+    print("raan: %16.16f deg" % np.rad2deg(raan))
+    print("argp: %16.16f deg" % np.rad2deg(argp))
+    print("nu: %16.16f deg" % np.rad2deg(nu))
 
 # Table 2a.
 
