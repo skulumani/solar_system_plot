@@ -11,7 +11,7 @@ def element_approx(JD_curr, planet_flag):
     T = (JD_curr - JD_J2000)/36525
 
     # load the elements and element rates for the planets
-    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot) = planet_elements(JD,planet_flag)
+    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_elements(JD,planet_flag)
 
     # compute the current elements at this JD
     a = a0 + adot*T
@@ -20,9 +20,13 @@ def element_approx(JD_curr, planet_flag):
     L = meanL0 + meanLdot*T
     lonperi = lonperi0 + lonperidot*T
     raan = raan0 + raandot*T
-    
-    # compute argp and M/v to complete the element set
 
+    # compute argp and M/v to complete the element set
+    argp = lonperi - raan
+    M = L - lonperi + b*T**2 + c*np.cos(f*T) + s*np.sin(f*T)
+
+    # solve kepler's equation to compute E and v
+    E, nu, count = kepler_eq_E(M_in,ecc_in)
     # package into a vector and output
 
 
@@ -43,6 +47,11 @@ def planet_elements(JD,planet_flag):
         
         print("Date is outside 1800-2050. Need to implement the coarse model.")
     else: # date is between 1800-2050AD and use the fine model
+        b = 0.0
+        c = 0.0
+        f = 0.0
+        s = 0.0
+
         if planet_flag == 1: # mercury
             a0 = 0.38709927
             adot = 0.00000037
@@ -210,12 +219,12 @@ def planet_elements(JD,planet_flag):
             print("Incorrect planet flag should be between 1 and 9")
 
         
-        return (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot)
+        return (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s)
 
 if __name__ == "__main__":
     JD_curr = 2457724.500000
 
-    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot) = planet_elements(JD_curr,3)
+    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_elements(JD_curr,3)
     # coe = element_approx(JD_curr,3)
 
 # Table 2a.
