@@ -1,4 +1,9 @@
 import numpy as np 
+from utilities import *
+import pdb
+import matplotlib.pyplot as plt 
+
+from mpl_toolkits.mplot3d import Axes3D
 
 def kepler_eq_E(M_in,ecc_in):
     """
@@ -224,5 +229,18 @@ if __name__ == "__main__":
     print("E: %5.4f M: %5.4f count: %5.4f" %( E_out,nu_out,count_out))
 
     # define orbital elements
-
+    p = 6578
+    ecc = 0.2
+    inc = np.deg2rad(10)
+    raan = np.deg2rad(12)
+    argp = np.deg2rad(15)
+    nu = np.deg2rad(165)
     # call conic orbit plotter
+    (x,y,z,xs,ys,zs) = conic_orbit(p,ecc, inc, raan, argp, nu, nu)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(x,y,z,'b')
+    ax.plot([xs],[ys],[zs],'ro')
+
+    plt.show()
