@@ -190,8 +190,8 @@ def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
         rs = p/2*(1+np.tan(nu_i/2)**2);
     else:
         # conic equation for elliptical orbit
-        r = p/(1+ecc*cos(v));
-        rs = p/(1+ecc*cos(nu_i));
+        r = p/(1+ecc*np.cos(v));
+        rs = p/(1+ecc*np.cos(nu_i));
     
     x = r*np.cos(v)
     y = r*np.sin(v)
@@ -209,16 +209,17 @@ def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
 
     orbit_plane = np.dot(dcm_pqw2eci,np.array([x,y,z]));
 
-    x = orbit_plane[1,:]
-    y = orbit_plane[2,:]
-    z = orbit_plane[3,:]
+    x = orbit_plane[0,:]
+    y = orbit_plane[1,:]
+    z = orbit_plane[2,:]
 
     sat_pos = np.dot(dcm_pqw2eci,np.array([xs,ys,zs]));
 
-    xs = sat_pos(1)
-    ys = sat_pos(2)
-    zs = sat_pos(3)
+    xs = sat_pos[0]
+    ys = sat_pos[1]
+    zs = sat_pos[2]
 
+    return (x,y,z,xs,ys,zs)
 
 if __name__ == "__main__":
     # test Kepler Equation solver
