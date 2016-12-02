@@ -13,7 +13,7 @@ def element_approx(JD_curr, planet_flag):
     T = (JD_curr - JD_J2000)/36525
 
     # load the elements and element rates for the planets
-    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_elements(JD,planet_flag)
+    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_elements(JD_curr,planet_flag)
 
     # compute the current elements at this JD
     a = a0 + adot*T
