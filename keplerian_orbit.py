@@ -164,12 +164,12 @@ def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
 
     tol = 1e-9
     step = 1000
-
+    
     # v = true anomaly
     if nu_f > nu_i:
         v = np.linspace(nu_i,nu_f,step)
     else:
-        v = np.linspace(nu_i,nu_f,step)
+        v = np.linspace(nu_i,nu_f+2*np.pi,step)
     
     if ecc - 1 > tol: # hyperbolic
         turn_angle = np.acos(-1.0/ecc)
