@@ -123,6 +123,98 @@ def kepler_eq_E(M_in,ecc_in):
 
     return (E,nu,count)
 
+def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
+    """Plot conic orbit
+        
+        Purpose: 
+           - Uses the polar conic equation to plot a conic orbit
+        
+        [x y z xs ys zs ] = conic_orbit(p,ecc,inc,raan,arg_p,nu_i,nu_f)
+        
+        Inputs: 
+           - p - semi-major axis (km)
+           - ecc - eccentricity
+           - raan - right acsension of the ascending node (rad) 0 < raan <
+           2*pi
+           - inc - inclination (rad) 0 < inc < pi
+           - arg_p - argument of periapsis (rad) 0 < arg_p < 2*pi
+           - nu_i - initial true anomaly (rad) 0 < nu < 2*pi
+           - nu_f - final true anomaly (rad) 0 < nu < 2*pi
+        
+        Outputs: 
+           - none
+        
+        Dependencies: 
+           - ROT1,ROT2,ROT3 - principle axis rotation matrices
+        
+        Author: 
+           - Shankar Kulumani 1 Dec 2012
+               - list revisions
+           - Shankar Kulumani 5 Dec 2014
+               - added outputs for orbit gui functions
+        
+        References
+           - AAE532 
+    """
+
+    tol = 1e-9
+    step = 1000
+
+    # v = true anomaly
+    if nu_f > nu_i:
+        v = np.linspace(nu_i,nu_f,step)
+    else:
+        v = np.linspace(nu_i,nu_f,step)
+    
+    if ecc - 1 > tol: # hyperbolic
+        turn_angle = np.acos(-1.0/ecc)
+        v = np.linespace(-turn_angle,turn_angle,step);
+
+        if nu_i > pi:
+            nu_i = nu_i-2*np.pi
+
+        r = p/(1+ecc*np.cos(v))
+        rs = p/(1+ecc*np.cos(nu_i))
+
+    elif np.absolute(ecc-1) < tol: #parabolic
+        v = np.linspace(-np.pi,np.pi,step);
+        if nu_i > np.pi:
+            nu_i = nu_i-2*np.pi
+        
+        r = p/2*(1+np.tan(v/2)**2);
+        rs = p/2*(1+np.tan(nu_i/2)**2);
+    else:
+        # conic equation for elliptical orbit
+        r = p/(1+ecc*cos(v));
+        rs = p/(1+ecc*cos(nu_i));
+    
+    x = r*np.cos(v)
+    y = r*np.sin(v)
+    z = np.zeros_like(x)
+
+    xs = rs*np.cos(nu_i)
+    ys = rs*np.sin(nu_i)
+    zs = 0
+    # rotate orbit plane to correct orientation
+
+     # M_rot = [cos(raan) * cos(arg_p) - sin(raan) * cos(inc) * sin(arg_p) -cos(raan) * sin(arg_p) - sin(raan) * cos(inc) * cos(arg_p) sin(raan) * sin(inc);
+     #         sin(raan) * cos(arg_p) + cos(raan) * cos(inc) * sin(arg_p) -sin(raan) * sin(arg_p) + cos(raan) * cos(inc) * cos(arg_p) -cos(raan) * sin(inc);
+     #         sin(inc) * sin(arg_p) sin(inc) * cos(arg_p) cos(inc);];
+    dcm_pqw2eci = np.dot(np.dot(ROT3(-raan),ROT1(-inc)),ROT3(-arg_p));
+
+    orbit_plane = np.dot(dcm_pqw2eci,np.array([x,y,z]));
+
+    x = orbit_plane[1,:]
+    y = orbit_plane[2,:]
+    z = orbit_plane[3,:]
+
+    sat_pos = np.dot(dcm_pqw2eci,np.array([xs,ys,zs]));
+
+    xs = sat_pos(1)
+    ys = sat_pos(2)
+    zs = sat_pos(3)
+
+
 if __name__ == "__main__":
     # test Kepler Equation solver
     M_in = np.array(0.5)
@@ -130,3 +222,7 @@ if __name__ == "__main__":
     E_out, nu_out, count_out = kepler_eq_E(M_in,ecc_in)
 
     print("E: %5.4f M: %5.4f count: %5.4f" %( E_out,nu_out,count_out))
+
+    # define orbital elements
+
+    # call conic orbit plotter
