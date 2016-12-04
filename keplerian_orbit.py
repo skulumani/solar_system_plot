@@ -1,9 +1,5 @@
 import numpy as np 
 from utilities import *
-import pdb
-import matplotlib.pyplot as plt 
-
-from mpl_toolkits.mplot3d import Axes3D
 
 def kepler_eq_E(M_in,ecc_in):
     """
@@ -222,6 +218,9 @@ def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
     return (x,y,z,xs,ys,zs)
 
 if __name__ == "__main__":
+    import matplotlib.pyplot as plt 
+    from mpl_toolkits.mplot3d import Axes3D
+
     # test Kepler Equation solver
     M_in = np.array(0.5)
     ecc_in = np.array(0)
@@ -243,5 +242,5 @@ if __name__ == "__main__":
     ax = fig.add_subplot(111, projection='3d')
     ax.plot(x,y,z,'b')
     ax.plot([xs],[ys],[zs],'ro')
-
+    plt.axis('equal')
     plt.show()
