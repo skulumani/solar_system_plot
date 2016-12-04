@@ -1,6 +1,7 @@
 import numpy as np 
 from keplerian_orbit import *
 from utilities import *
+from time_utilities import *
 
 def element_approx(JD_curr, planet_flag):
     """
@@ -60,7 +61,7 @@ def planet_elements(JD,planet_flag):
         f = 0.0
         s = 0.0
 
-        if planet_flag == 1: # mercury
+        if planet_flag == 0: # mercury
             a0 = 0.38709927
             adot = 0.00000037
 
@@ -79,7 +80,7 @@ def planet_elements(JD,planet_flag):
             raan0 = 48.33076593
             raandot = -0.12534081
 
-        elif planet_flag == 2: # venus
+        elif planet_flag == 1: # venus
             a0 = 0.72333566
             adot = 0.00000390
 
@@ -97,7 +98,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 76.67984255
             raandot = -0.27769418
-        elif planet_flag == 3: # earth moon barycenter
+        elif planet_flag == 2: # earth moon barycenter
             a0 = 1.00000261
             adot = 0.00000562
 
@@ -115,7 +116,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 0.0
             raandot = 0.0
-        elif planet_flag == 4: # mars
+        elif planet_flag == 3: # mars
             a0 = 1.52371034
             adot = 0.00001847
 
@@ -133,7 +134,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 49.55953891
             raandot = -0.29257343
-        elif planet_flag == 5: # jupiter
+        elif planet_flag == 4: # jupiter
             a0 = 5.20288700
             adot = -0.00011607
 
@@ -151,7 +152,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 100.47390909
             raandot = 0.20469106
-        elif planet_flag == 6: # saturn
+        elif planet_flag == 5: # saturn
             a0 = 9.53667594
             adot = -0.00125060
 
@@ -169,7 +170,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 113.66242448
             raandot = -0.28867794
-        elif planet_flag == 7: # uranus
+        elif planet_flag == 6: # uranus
             a0 = 19.18916464
             adot = -0.00196176
 
@@ -187,7 +188,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 74.01692503
             raandot = 0.04240589
-        elif planet_flag == 8: # neptune
+        elif planet_flag == 7: # neptune
             a0 = 30.06992276
             adot = 0.00026291
 
@@ -205,7 +206,7 @@ def planet_elements(JD,planet_flag):
 
             raan0 = 131.78422574
             raandot = -0.00508664
-        elif planet_flag == 9: # pluto
+        elif planet_flag == 8: # pluto
             a0 = 39.48211675
             adot = -0.00031596
 
@@ -229,8 +230,40 @@ def planet_elements(JD,planet_flag):
         
         return (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s)
 
+def plot_planets(JD):
+    # function to draw all of the planets
+    import matplotlib.pyplot as plt 
+    from mpl_toolkits.mplot3d import Axes3D
+
+    planet_names = ('Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    # loop over all the planets and compute the COE
+    for planet_flag in range(4):
+        # calculate the conic orbit for each planet 
+        p,ecc,inc,raan,argp,nu = element_approx(JD,planet_flag)
+
+        (x,y,z,xs,ys,zs) = conic_orbit(p,ecc, inc, raan, argp, nu, nu)
+        # plot the planet to figure
+        ax.plot(x,y,z,'b')
+        ax.plot([xs],[ys],[zs],'ro')
+        ax.text(xs,ys,zs,planet_names[planet_flag])
+
+    ax.set_xlim([-5,5])
+    ax.set_ylim([-5,5])
+    ax.set_zlim([-5,5])
+    plt.axis('equal')    
+    plt.show()
+
 if __name__ == "__main__":
-    JD_curr = 2457724.500000
+    yr = 2016
+    mon = 12
+    day = 3
+    hr = 1
+    minute = 2
+    sec = 30
+
+    JD_curr,MJD = date2jd(yr,mon,day,hr,minute,sec)
     planet_flag = 3
     p,ecc,inc,raan,argp,nu = element_approx(JD_curr,planet_flag)
 
@@ -242,6 +275,7 @@ if __name__ == "__main__":
     print("argp: %16.16f deg" % np.rad2deg(argp))
     print("nu: %16.16f deg" % np.rad2deg(nu))
 
+    plot_planets(JD_curr)
 # Table 2a.
 
 # Keplerian elements and their rates, with respect to the mean ecliptic and equinox of J2000,
