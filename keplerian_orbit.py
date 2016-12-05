@@ -217,6 +217,83 @@ def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
 
     return (x,y,z,xs,ys,zs)
 
+def nu2anom(nu,ecc):
+    """
+    [E M] = ecc_anomaly(nu,ecc)
+
+       Purpose:
+           - Calculates the eccentric and mean anomaly given eccentricity and
+           true anomaly
+
+       Inputs:
+           - nu - true anomaly in rad -2*pi < nu < 2*pi
+           - ecc - eccentricity of orbit 0 < ecc < inf
+
+       Outputs:
+           - E - (elliptical/parabolic/hyperbolic) eccentric anomaly in rad
+               0 < E < 2*pi
+           - M - mean anomaly in rad 0 < M < 2*pi
+
+       Dependencies:
+           - none
+
+       Author:
+           - Shankar Kulumani 5 Dec 2016
+                - Convert to python
+           - Shankar Kulumani 15 Sept 2012
+               - modified from USAFA code and notes from AAE532
+               - only elliptical case will add other later
+           - Shankar Kulumani 17 Sept 2012
+               - added rev check to reduce angle btwn 0 and 2*pi
+
+       References
+           - AAE532 notes
+           - Vallado 3rd Ed
+    """
+
+    small = 1e-9
+
+    if ecc <= small: # circular
+         E = nu
+         M = nu
+    elif small < ecc and ecc <= 1-small: # elliptical
+        sine = ( np.sqrt( 1.0 -ecc*ecc ) * np.sin(nu) ) / ( 1.0 +ecc*np.cos(nu) )
+        cose = ( ecc + np.cos(nu) ) / ( 1.0  + ecc*np.cos(nu) )
+        
+        E   = np.arctan2( sine,cose )
+        M   = E - ecc*np.sin(E)
+        
+        E = normalize(E,0,2*np.pi)
+        M = normalize(M,0,2*np.pi)
+
+    elif np.absolute(ecc-1) <= small: # parabolic
+        B = np.tan(nu/2)
+
+        E = B
+        M = B + 1.0/3*B**3
+
+        # E = revcheck(E);
+        # M = revcheck(M);
+    elif ecc > 1+small: # hyperbolic
+            sine = ( np.sqrt(ecc**2-1) * np.sin(nu) ) / ( 1.0  + ecc*np.cos(nu) )
+            H = np.arcsinh( sine )
+            E = H
+            M = ecc*np.sinh(H) - H
+            
+            # E = revcheck(E);
+            # M = revcheck(M);
+    else:
+        print("Eccentricity is out of bounds 0 < ecc < inf")
+    
+    return (E, M)
+
+def tof_delta_t(p,ecc,mu,nu_0,delta_t):
+    """
+        Propogate a COE into the future
+    """
+    return 0
+
+
 if __name__ == "__main__":
     import matplotlib.pyplot as plt 
     from mpl_toolkits.mplot3d import Axes3D
@@ -244,3 +321,6 @@ if __name__ == "__main__":
     ax.plot([xs],[ys],[zs],'ro')
     plt.axis('equal')
     plt.show()
+
+    # test True anomaly converter
+    print("Convert \\nu to E and M")
