@@ -256,12 +256,16 @@ def plot_planets(JD):
     plt.show()
 
 if __name__ == "__main__":
-    yr = 2016
-    mon = 12
-    day = 3
-    hr = 1
-    minute = 2
-    sec = 30
+
+    from datetime import datetime
+
+    today_date = datetime.today()
+    yr = today_date.year
+    mon = today_date.month
+    day = today_date.day
+    hr = today_date.hour
+    minute = today_date.minute
+    sec = today_date.second
 
     JD_curr,MJD = date2jd(yr,mon,day,hr,minute,sec)
     planet_flag = 3
