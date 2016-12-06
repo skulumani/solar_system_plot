@@ -1,5 +1,5 @@
 """Pytest for keplerian_orbit.py"""
-from solar_system_plot.keplerian_orbit import kepler_eq_E
+from keplerian_orbit.keplerian_orbit import kepler_eq_E
 import numpy as np
 
 def test_kepler_eq_E():
