@@ -316,34 +316,3 @@ def tof_delta_t(p,ecc,mu,nu_0,delta_t):
 
     return (E_f, M_f, nu_f)
 
-
-if __name__ == "__main__":
-    import matplotlib.pyplot as plt 
-    from mpl_toolkits.mplot3d import Axes3D
-
-    # test Kepler Equation solver
-    M_in = np.array(0.5)
-    ecc_in = np.array(0)
-    E_out, nu_out, count_out = kepler_eq_E(M_in,ecc_in)
-
-    print("E: %5.4f M: %5.4f count: %5.4f" %( E_out,nu_out,count_out))
-
-    # define orbital elements
-    p = 6578
-    ecc = 0.2
-    inc = np.deg2rad(10)
-    raan = np.deg2rad(12)
-    argp = np.deg2rad(15)
-    nu = np.deg2rad(165)
-    # call conic orbit plotter
-    (x,y,z,xs,ys,zs) = conic_orbit(p,ecc, inc, raan, argp, nu, nu)
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot(x,y,z,'b')
-    ax.plot([xs],[ys],[zs],'ro')
-    plt.axis('equal')
-    plt.show()
-
-    # test True anomaly converter
-    print("Convert \\nu to E and M")

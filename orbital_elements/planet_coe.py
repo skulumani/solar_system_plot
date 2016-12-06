@@ -1,4 +1,7 @@
-"""Module to output the orbital elements of the planets""""
+"""Module to output the orbital elements of the planets"""
+import numpy as np
+from utilities.attitude import normalize
+from keplerian_orbit.keplerian_orbit import kepler_eq_E
 
 def element_approx(JD_curr, planet_flag):
     """
