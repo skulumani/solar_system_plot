@@ -1,5 +1,5 @@
 import numpy as np 
-from utilities import *
+import utilities.attitude as attitude
 
 def kepler_eq_E(M_in,ecc_in):
     """
@@ -201,7 +201,7 @@ def conic_orbit(p,ecc, inc, raan, arg_p, nu_i, nu_f):
      # M_rot = [cos(raan) * cos(arg_p) - sin(raan) * cos(inc) * sin(arg_p) -cos(raan) * sin(arg_p) - sin(raan) * cos(inc) * cos(arg_p) sin(raan) * sin(inc);
      #         sin(raan) * cos(arg_p) + cos(raan) * cos(inc) * sin(arg_p) -sin(raan) * sin(arg_p) + cos(raan) * cos(inc) * cos(arg_p) -cos(raan) * sin(inc);
      #         sin(inc) * sin(arg_p) sin(inc) * cos(arg_p) cos(inc);];
-    dcm_pqw2eci = np.dot(np.dot(ROT3(-raan),ROT1(-inc)),ROT3(-arg_p));
+    dcm_pqw2eci = np.dot(np.dot(attitude.ROT3(-raan),attitude.ROT1(-inc)),attitude.ROT3(-arg_p));
 
     orbit_plane = np.dot(dcm_pqw2eci,np.array([x,y,z]));
 
@@ -263,8 +263,8 @@ def nu2anom(nu,ecc):
         E   = np.arctan2( sine,cose )
         M   = E - ecc*np.sin(E)
         
-        E = normalize(E,0,2*np.pi)
-        M = normalize(M,0,2*np.pi)
+        E = attitude.normalize(E,0,2*np.pi)
+        M = attitude.normalize(M,0,2*np.pi)
 
     elif np.absolute(ecc-1) <= small: # parabolic
         B = np.tan(nu/2)
