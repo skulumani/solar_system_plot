@@ -1,5 +1,5 @@
 # script to plot the orbits of several asteroids
-from planet_coe import *
+from solar_system_plot.planet_coe import *
 import numpy as np
 
 # load the COEs for the asteroids
