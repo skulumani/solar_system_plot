@@ -127,7 +127,7 @@ def normalize(num, lower=0, upper=360, b=False):
 
 def ROT1(angle):
     """
-    Elementary rotation about the first axis. For column vectors b = R*a
+    Elementary rotation about the first axis. For row vectors b = a*R
     """
     cos_a = math.cos(angle)
     sin_a = math.sin(angle)
@@ -142,7 +142,7 @@ def ROT1(angle):
     
 def ROT2(angle):
     """
-    Elementary rotation about the second axis. For column vectors b = R a
+    Elementary rotation about the second axis. For row vectors b = a R
     """
     cos_a = math.cos(angle)
     sin_a = math.sin(angle)
@@ -157,7 +157,7 @@ def ROT2(angle):
     
 def ROT3(angle):
     """
-    Elementary rotation about the third axis. For column vectors b = R a
+    Elementary rotation about the third axis. For row vectors b = a R
     """
     cos_a = math.cos(angle)
     sin_a = math.sin(angle)
