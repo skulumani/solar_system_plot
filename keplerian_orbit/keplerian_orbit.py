@@ -291,7 +291,30 @@ def tof_delta_t(p,ecc,mu,nu_0,delta_t):
     """
         Propogate a COE into the future
     """
-    return 0
+
+    tol = 1e-9
+    # calculate initial eccentric anomaly and mean anomaly
+    E_0, M_0 = nu2anom(nu_0,ecc)
+
+    # check eccentricity
+    if np.absolute(ecc-1) < tol: # parabolic
+        n = 2*np.sqrt(mu/p**3)
+    else:
+        a = p/(1-ecc**2)
+        # calculate mean motion
+        n = np.sqrt(mu/a**3)
+    
+
+    # calculate mean anomaly after delta t
+
+    M_f = M_0 + n * delta_t
+    k = np.floor(M_f/(2*pi))
+    M_f = M_f-2*pi*k
+    # calculate eccentric anomaly from mean anomaly (newton iteration)
+
+    E_f,nu_f,count = kepler_eq_E(M_f,ecc)
+
+    return (E_f, M_f, nu_f)
 
 
 if __name__ == "__main__":
