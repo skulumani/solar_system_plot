@@ -5,7 +5,7 @@ from utilities.attitude import normalize
 import matplotlib.pyplot as plt 
 from mpl_toolkits.mplot3d import Axes3D
 from keplerian_orbit.keplerian_orbit import conic_orbit, kepler_eq_E  
-from orbital_elements.planet_coe import element_approx
+from orbital_elements.planet_coe import planet_coe
 
 def plot_planets(JD):
     # function to draw all of the planets
@@ -16,7 +16,7 @@ def plot_planets(JD):
     # loop over all the planets and compute the COE
     for planet_flag in range(4):
         # calculate the conic orbit for each planet 
-        p,ecc,inc,raan,argp,nu = element_approx(JD,planet_flag)
+        p,ecc,inc,raan,argp,nu = planet_coe(JD,planet_flag)
 
         (x,y,z,xs,ys,zs) = conic_orbit(p,ecc, inc, raan, argp, nu, nu)
         # plot the planet to figure
@@ -31,28 +31,29 @@ def plot_planets(JD):
     plt.show()
 
 
+if __name__ == "__main__":
 
-today_date = datetime.today()
-yr = today_date.year
-mon = today_date.month
-day = today_date.day
-hr = today_date.hour
-minute = today_date.minute
-sec = today_date.second
+    today_date = datetime.today()
+    yr = today_date.year
+    mon = today_date.month
+    day = today_date.day
+    hr = today_date.hour
+    minute = today_date.minute
+    sec = today_date.second
 
-JD_curr,MJD = date2jd(yr,mon,day,hr,minute,sec)
-planet_flag = 3
-p,ecc,inc,raan,argp,nu = element_approx(JD_curr,planet_flag)
+    JD_curr,MJD = date2jd(yr,mon,day,hr,minute,sec)
+    planet_flag = 3
+    p,ecc,inc,raan,argp,nu = planet_coe(JD_curr,planet_flag)
 
-print("p: %16.16f au" % p)
-print("a: %16.16f au" % (p/(1-ecc**2)))
-print("ecc: %16.16f " % ecc)
-print("inc: %16.16f deg" % np.rad2deg(inc))
-print("raan: %16.16f deg" % np.rad2deg(raan))
-print("argp: %16.16f deg" % np.rad2deg(argp))
-print("nu: %16.16f deg" % np.rad2deg(nu))
+    print("p: %16.16f au" % p)
+    print("a: %16.16f au" % (p/(1-ecc**2)))
+    print("ecc: %16.16f " % ecc)
+    print("inc: %16.16f deg" % np.rad2deg(inc))
+    print("raan: %16.16f deg" % np.rad2deg(raan))
+    print("argp: %16.16f deg" % np.rad2deg(argp))
+    print("nu: %16.16f deg" % np.rad2deg(nu))
 
-plot_planets(JD_curr)
+    plot_planets(JD_curr)
 
 
 # Table 2a.

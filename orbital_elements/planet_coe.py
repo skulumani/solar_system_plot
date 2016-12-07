@@ -3,7 +3,7 @@ import numpy as np
 from utilities.attitude import normalize
 from keplerian_orbit.keplerian_orbit import kepler_eq_E
 
-def element_approx(JD_curr, planet_flag):
+def planet_coe(JD_curr, planet_flag):
     """
     Given current JD this function will output the current orbital elements for 
     all of the planets
@@ -14,7 +14,7 @@ def element_approx(JD_curr, planet_flag):
     T = (JD_curr - JD_J2000)/36525
 
     # load the elements and element rates for the planets
-    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_elements(JD_curr,planet_flag)
+    (a0,adot,e0,edot,inc0,incdot,meanL0,meanLdot,lonperi0,lonperidot,raan0,raandot,b,c,f,s) = planet_approx(JD_curr,planet_flag)
 
     # compute the current elements at this JD
     a = a0 + adot*T
@@ -39,7 +39,7 @@ def element_approx(JD_curr, planet_flag):
 
     return coe
 
-def planet_elements(JD,planet_flag):
+def planet_approx(JD,planet_flag):
     """
     This outputs the orbital element information data for the selected planet. 
     Also does some logic checking based on the desired time period
