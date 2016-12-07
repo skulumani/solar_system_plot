@@ -10,6 +10,10 @@ from orbital_elements.planet_coe import planet_coe
 
 from orbital_elements.asteroid_coe import asteroid_coe
 
+from keplerian_orbit.coe import coe2rv
+
+km2au = 1/149597870.700
+
 # plot all the planets
 today_date = datetime.today()
 yr = today_date.year
