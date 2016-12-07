@@ -308,8 +308,8 @@ def tof_delta_t(p,ecc,mu,nu_0,delta_t):
     # calculate mean anomaly after delta t
 
     M_f = M_0 + n * delta_t
-    k = np.floor(M_f/(2*pi))
-    M_f = M_f-2*pi*k
+    k = np.floor(M_f/(2*np.pi))
+    M_f = M_f-2*np.pi*k
     # calculate eccentric anomaly from mean anomaly (newton iteration)
 
     E_f,nu_f,count = kepler_eq_E(M_f,ecc)
