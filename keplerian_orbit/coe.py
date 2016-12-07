@@ -63,13 +63,11 @@ def coe2rv(p,ecc,inc,raan,arg_p,nu,mu):
             nu = arg_p + nu
             # nu = arglat
         
-    elif ( ( inc <tol) or (abs(inc-pi)<tol) ):    # elliptical equatorial
+    elif ( ( inc <tol) or (abs(inc-np.pi)<tol) ):    # elliptical equatorial
         arg_p = raan + arg_p
         raan = 0.0
         # arg_p=lonper
-    else:
-        print("Something crazy happened")
-    
+       
     
     cosnu = np.cos(nu)
     sinnu = np.sin(nu)
