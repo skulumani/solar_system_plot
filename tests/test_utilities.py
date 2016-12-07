@@ -17,20 +17,20 @@ atol = 0
 def test_ROT1_SO3():
     """Make sure ROT1(angle) \in SO(3)"""
 
-    tst.assert_allclose(np.dot(np.transpose(att.ROT1(angle)),att.ROT1(angle)), np.identity(3))
-    tst.assert_allclose(np.linalg.det(att.ROT1(angle)),1.0)
+    tst.assert_array_almost_equal(np.dot(np.transpose(att.ROT1(angle)),att.ROT1(angle)), np.identity(3))
+    tst.assert_array_almost_equal(np.linalg.det(att.ROT1(angle)),1.0)
 
 def test_ROT2_SO3():
     """Make sure ROT2(angle) \in SO(3)"""
 
-    tst.assert_allclose(np.dot(np.transpose(att.ROT2(angle)),att.ROT2(angle)), np.identity(3))
-    tst.assert_allclose(np.linalg.det(att.ROT2(angle)),1.0)
+    tst.assert_array_almost_equal(np.dot(np.transpose(att.ROT2(angle)),att.ROT2(angle)), np.identity(3))
+    tst.assert_array_almost_equal(np.linalg.det(att.ROT2(angle)),1.0)
 
 def test_ROT3_SO3():
     """Make sure ROT1(angle) \in SO(3)"""
 
-    tst.assert_allclose(np.dot(np.transpose(att.ROT3(angle)),att.ROT3(angle)), np.identity(3))
-    tst.assert_allclose(np.linalg.det(att.ROT3(angle)),1.0)
+    tst.assert_array_almost_equal(np.dot(np.transpose(att.ROT3(angle)),att.ROT3(angle)), np.identity(3))
+    tst.assert_array_almost_equal(np.linalg.det(att.ROT3(angle)),1.0)
 
 def test_ROT1_90():
     """Make sure a 90 degree rotation rotates a column vector correctly"""
