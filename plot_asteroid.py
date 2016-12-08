@@ -12,12 +12,15 @@ from orbital_elements.asteroid_coe import asteroid_coe
 
 from keplerian_orbit.coe import coe2rv
 
+
 km2au = 1/149597870.700
 au2km = 1/km2au
 mu = 1.32712440018e11 # km^3/sec^2
 
 def write_to_file():
-   
+    """
+        Write 10 periods of the J2000 state to a text file
+    """
     # loop over the asteriods and compute the state
     asteroid_names = ('EV5','Itokawa','Bennu')
     # plot each asteroid
