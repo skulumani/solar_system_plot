@@ -26,9 +26,10 @@ def write_to_file():
     # plot each asteroid
     for ast_flag in range(3):
         (p,ecc,inc,raan,argp,nu) = asteroid_coe(JD_curr,ast_flag)
+        p = p*au2km
 
         # compute period of orbit
-        period = np.sqrt((p*au2km/(1-ecc**2))**3/mu) # period in seconds
+        period = 10*2*np.pi*np.sqrt((p/(1-ecc**2))**3/mu) # period in seconds
 
         with open(asteroid_names[ast_flag] + ".txt", "w") as text_file:
 
@@ -40,7 +41,7 @@ def write_to_file():
                 # propogate epoch to current t
                 nu_curr = tof_delta_t(p,ecc,mu,nu,t_curr)[2]
                 # convert COE to RV
-                r_ijk, v_ijk, r_pqw, v_pqw = coe2rv(p*1/km2au,ecc,inc,raan,argp,nu_curr,mu)
+                r_ijk, v_ijk, r_pqw, v_pqw = coe2rv(p,ecc,inc,raan,argp,nu_curr,mu)
                 # print to text file
                 print("%16.16f %16.16f %16.16f %16.16f %16.16f %16.16f %16.16f" % (t_curr, r_ijk[0], r_ijk[1], r_ijk[2], v_ijk[0], v_ijk[1], v_ijk[2]), file=text_file)
 
