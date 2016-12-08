@@ -14,6 +14,30 @@ from keplerian_orbit.coe import coe2rv
 
 km2au = 1/149597870.700
 
+def write_to_file():
+    # write the asteroid state to a text file
+    out_filename = "ast_state.txt"
+
+    with open(out_filename, "w") as text_file:
+        # loop over the asteriods and compute the state
+        asteroid_names = ('EV5','Itokawa','Bennu')
+        # plot each asteroid
+        for ast_flag in range(1):
+            (p,ecc,inc,raan,argp,nu) = asteroid_coe(JD_curr,ast_flag)
+            # convert COE to RV and print to screen
+            # make sure the units of the COEs are consistent
+            mu = 1.32712440018e11 # km^3/sec^2
+            # loop over nu and compute COE2RV and print to text file
+            (x,y,z,xs,ys,zs) = conic_orbit(1/km2au*p,ecc, inc, raan, argp, nu, nu)
+
+            
+
+            print("Asteroid: {} state wrt Sol barycenter".format(asteroid_names[ast_flag]), file=text_file)
+            print("")
+            # print to text file
+            print("%16.16f %16.16f %16.16f" % (x, y, z), file=text_file)
+
+    return 0
 # plot all the planets
 today_date = datetime.today()
 yr = today_date.year
@@ -58,19 +82,6 @@ for ast_flag in range(3):
 
     r_ijk, v_ijk, r_pqw, v_pqw = coe2rv(p,ecc,inc,raan,argp,nu,mu)
 
-    # print to screen/text file
-    print("%s state wrt Sol barycenter" % asteroid_names[ast_flag])
-    print("    Pos (km): %16.16f %16.16f %16.16f" % (r_ijk[0], r_ijk[1], r_ijk[2]))
-    print("    Vel (km/sec): %16.16f %16.16f %16.16f" % (v_ijk[0], v_ijk[1], v_ijk[2]))
-# print the state of the Earth
-p,ecc,inc,raan,argp,nu = planet_coe(JD_curr,3)
-r_ijk, v_ijk, r_pqw, v_pqw = coe2rv(p*1/km2au,ecc,inc,raan,argp,nu,mu)
-
-print("")
-print("Earth State wrt sol barycenter")
-print("    Pos (km): %16.16f %16.16f %16.16f" % (r_ijk[0], r_ijk[1], r_ijk[2]))
-print("    Vel (km/sec): %16.16f %16.16f %16.16f" % (v_ijk[0], v_ijk[1], v_ijk[2]))
-
 ax.set_xlim([-5,5])
 ax.set_ylim([-5,5])
 ax.set_zlim([-5,5])
@@ -78,4 +89,5 @@ ax.set_title('Solar System JD %10.3f' % JD_curr)
 plt.axis('off')
 ax.view_init(azim=0, elev=90)
 plt.show()
-# transform RV to Sun Earth 3BP and nondimensionalize
+
+
