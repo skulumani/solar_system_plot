@@ -5,7 +5,7 @@ from utilities.time import date2jd
 from utilities.attitude import normalize
 import matplotlib.pyplot as plt 
 from mpl_toolkits.mplot3d import Axes3D
-from keplerian_orbit.keplerian_orbit import conic_orbit, kepler_eq_E  
+from keplerian_orbit.keplerian_orbit import conic_orbit, kepler_eq_E, tof_delta_t
 from orbital_elements.planet_coe import planet_coe
 
 from orbital_elements.asteroid_coe import asteroid_coe
@@ -13,6 +13,7 @@ from orbital_elements.asteroid_coe import asteroid_coe
 from keplerian_orbit.coe import coe2rv
 
 km2au = 1/149597870.700
+au2km = 1/km2au
 mu = 1.32712440018e11 # km^3/sec^2
 
 def write_to_file():
@@ -22,17 +23,23 @@ def write_to_file():
     # plot each asteroid
     for ast_flag in range(3):
         (p,ecc,inc,raan,argp,nu) = asteroid_coe(JD_curr,ast_flag)
+
+        # compute period of orbit
+        period = np.sqrt((p*au2km/(1-ecc**2))**3/mu) # period in seconds
+
         with open(asteroid_names[ast_flag] + ".txt", "w") as text_file:
 
-            print("Asteroid: {} state wrt Sol barycenter (x(km) y(km) z(km) vx(km/sec) vy(km/sec) vz(km/sec)".format(asteroid_names[ast_flag]), file=text_file)
+            print("Asteroid: {} state wrt Sol barycenter ( t(sec) x(km) y(km) z(km) vx(km/sec) vy(km/sec) vz(km/sec)".format(asteroid_names[ast_flag]), file=text_file)
             # loop over nu and compute COE2RV and print to text file
-            v = np.linspace(nu,nu+2*np.pi,1000)
-            for idx,nu_curr in enumerate(v):
+            time_span = np.linspace(0,period,1000)
+            for idx,t_curr in enumerate(time_span):
 
+                # propogate epoch to current t
+                nu_curr = tof_delta_t(p,ecc,mu,nu,t_curr)[2]
                 # convert COE to RV
                 r_ijk, v_ijk, r_pqw, v_pqw = coe2rv(p*1/km2au,ecc,inc,raan,argp,nu_curr,mu)
                 # print to text file
-                print("%16.16f %16.16f %16.16f %16.16f %16.16f %16.16f" % (r_ijk[0], r_ijk[1], r_ijk[2], v_ijk[0], v_ijk[1], v_ijk[2]), file=text_file)
+                print("%16.16f %16.16f %16.16f %16.16f %16.16f %16.16f %16.16f" % (t_curr, r_ijk[0], r_ijk[1], r_ijk[2], v_ijk[0], v_ijk[1], v_ijk[2]), file=text_file)
 
     return 0
 
