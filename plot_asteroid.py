@@ -35,7 +35,7 @@ def write_to_file():
 
             print("Asteroid: {} state wrt Sol barycenter ( t(sec) x(km) y(km) z(km) vx(km/sec) vy(km/sec) vz(km/sec)".format(asteroid_names[ast_flag]), file=text_file)
             # loop over nu and compute COE2RV and print to text file
-            time_span = np.linspace(0,period,1000)
+            time_span = np.arange(0,period,86400)
             for idx,t_curr in enumerate(time_span):
 
                 # propogate epoch to current t
