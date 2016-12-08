@@ -13,31 +13,29 @@ from orbital_elements.asteroid_coe import asteroid_coe
 from keplerian_orbit.coe import coe2rv
 
 km2au = 1/149597870.700
+mu = 1.32712440018e11 # km^3/sec^2
 
 def write_to_file():
-    # write the asteroid state to a text file
-    out_filename = "ast_state.txt"
+   
+    # loop over the asteriods and compute the state
+    asteroid_names = ('EV5','Itokawa','Bennu')
+    # plot each asteroid
+    for ast_flag in range(3):
+        (p,ecc,inc,raan,argp,nu) = asteroid_coe(JD_curr,ast_flag)
+        with open(asteroid_names[ast_flag] + ".txt", "w") as text_file:
 
-    with open(out_filename, "w") as text_file:
-        # loop over the asteriods and compute the state
-        asteroid_names = ('EV5','Itokawa','Bennu')
-        # plot each asteroid
-        for ast_flag in range(1):
-            (p,ecc,inc,raan,argp,nu) = asteroid_coe(JD_curr,ast_flag)
-            # convert COE to RV and print to screen
-            # make sure the units of the COEs are consistent
-            mu = 1.32712440018e11 # km^3/sec^2
+            print("Asteroid: {} state wrt Sol barycenter (x(km) y(km) z(km) vx(km/sec) vy(km/sec) vz(km/sec)".format(asteroid_names[ast_flag]), file=text_file)
             # loop over nu and compute COE2RV and print to text file
-            (x,y,z,xs,ys,zs) = conic_orbit(1/km2au*p,ecc, inc, raan, argp, nu, nu)
+            v = np.linspace(nu,nu+2*np.pi,1000)
+            for idx,nu_curr in enumerate(v):
 
-            
-
-            print("Asteroid: {} state wrt Sol barycenter".format(asteroid_names[ast_flag]), file=text_file)
-            print("")
-            # print to text file
-            print("%16.16f %16.16f %16.16f" % (x, y, z), file=text_file)
+                # convert COE to RV
+                r_ijk, v_ijk, r_pqw, v_pqw = coe2rv(p*1/km2au,ecc,inc,raan,argp,nu_curr,mu)
+                # print to text file
+                print("%16.16f %16.16f %16.16f %16.16f %16.16f %16.16f" % (r_ijk[0], r_ijk[1], r_ijk[2], v_ijk[0], v_ijk[1], v_ijk[2]), file=text_file)
 
     return 0
+
 # plot all the planets
 today_date = datetime.today()
 yr = today_date.year
