@@ -63,7 +63,7 @@ ax = fig.add_subplot(111, projection='3d')
 # plot the planets
 planet_names = ('Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto')
 # loop over all the planets and compute the COE
-for planet_flag in range(4):
+for planet_flag in range(9):
     # calculate the conic orbit for each planet 
     p,ecc,inc,raan,argp,nu = planet_coe(JD_curr,planet_flag)
 
