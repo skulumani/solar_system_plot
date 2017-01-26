@@ -30,7 +30,7 @@ def write_to_file():
         p = p*au2km
 
         # compute period of orbit
-        period = 50*2*np.pi*np.sqrt((p/(1-ecc**2))**3/mu) # period in seconds
+        period = 500*2*np.pi*np.sqrt((p/(1-ecc**2))**3/mu) # period in seconds
 
         with open(asteroid_names[ast_flag] + ".txt", "w") as text_file:
 
