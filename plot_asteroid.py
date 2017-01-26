@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # script to plot the orbits of several asteroids
 import numpy as np 
 from datetime import datetime
